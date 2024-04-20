@@ -24,7 +24,7 @@ export default async function TxnOverview({ address, txnHash }: { address: strin
       <Card className="border mt-8">
         <CardHeader className="text-lg font-semibold">Overview</CardHeader>
         <CardContent className="flex flex-col gap-6 text-sm">
-          <p className="flex flex-col gap-1 uppercase">
+          <div className="flex flex-col gap-1 ">
             <span className="opacity-70">Transaction Hash:</span>
             <div className="flex gap-2 items-center">
               <span className="text-primary">{txnHash}</span>
@@ -32,36 +32,36 @@ export default async function TxnOverview({ address, txnHash }: { address: strin
                 <ExternalLink size={15} />
               </Link>
             </div>
-          </p>
-          <p className="flex flex-col gap-1 uppercase">
+          </div>
+          <p className="flex flex-col gap-1">
             <span className="opacity-70">Status </span>
             <span className={cn('text-primary', { 'text-green-500': status === 'Success' })}>{status}</span>
           </p>
-          <p className="flex flex-col gap-1 uppercase">
+          <p className="flex flex-col gap-1">
             <span className="opacity-70">Block:</span>
             <span className="text-primary">{selectedTransaction.blockNumber} </span>
           </p>
-          <p className="flex flex-col gap-1 uppercase">
+          <p className="flex flex-col gap-1">
             <span className="opacity-70">Timestamp:</span>
             <span className="text-primary">{formatFromNow(selectedTransaction.timeStamp * 1000)}</span>
           </p>
-          <p className="flex flex-col gap-1 uppercase">
+          <p className="flex flex-col gap-1">
             <span className="opacity-70">From:</span>
             <span className="text-primary">{selectedTransaction.from}</span>
           </p>
-          <p className="flex flex-col gap-1 uppercase">
+          <p className="flex flex-col gap-1">
             <span className="opacity-70">To:</span>
             <span className="text-primary">{selectedTransaction.to}</span>
           </p>
-          <p className="flex flex-col gap-1 uppercase">
+          <p className="flex flex-col gap-1">
             <span className="opacity-70">Value:</span>
             <span className="text-primary">{ethValue} ETH </span>
           </p>
-          <p className="flex flex-col gap-1 uppercase">
+          <p className="flex flex-col gap-1">
             <span className="opacity-70">Transaction Fee:</span>
             <span className="text-primary">{transactionFeeInGwei} Gwei</span>
           </p>
-          <p className="flex flex-col gap-1 uppercase">
+          <p className="flex flex-col gap-1">
             <span className="opacity-70">Gas Price:</span>
             <span className="text-primary">{selectedTransaction.gasPrice} </span>
           </p>

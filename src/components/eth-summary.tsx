@@ -16,7 +16,7 @@ const EthSummary = async () => {
         <div className="flex justify-between gap-5 w-full">
           <div className="flex items-center gap-3">
             <Link href={'/'}>
-              <Image src="/ethereum_icon.png" alt="ethereum_icon" width={100} height={100} className="w-10 h-10" />
+              <Image src="/ethereum_icon.png" alt="ethereum_icon" width={100} height={100} className="w-10 h-10 animate-pulse" />
             </Link>
             <div className="flex flex-col gap-1 items-start text-opacity-70">
               <p className=" font-light uppercase text-sm">Ether Price</p>

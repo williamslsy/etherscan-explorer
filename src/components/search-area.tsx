@@ -24,8 +24,13 @@ export default function SearchArea() {
         <Link href={`/`} className="font-bold text-xl text-white">
           The Ethereum Blockchain Explorer
         </Link>
-        <div className="p-2 bg-white dark:bg-black rounded-lg flex justify-between gap-2">
+        <div className="p-2 bg-white dark:bg-black rounded-lg flex justify-between gap-2 relative">
           <Input placeholder="Search by Address" className="w-full dark:bg-black" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
+          {searchValue && (
+            <button onClick={() => setSearchValue('')} className="font-bold absolute right-12 inset-y-0 px-4 hidden md:flex items-center justify-center text-black dark:text-white">
+              x
+            </button>
+          )}
           <Button className="bg-primary p-2" onClick={handleSearch}>
             <Search />
           </Button>

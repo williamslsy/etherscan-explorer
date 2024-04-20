@@ -15,7 +15,7 @@ export default async function Header() {
         {isValidData('ethPrice') && isValidData('gasPrice') ? (
           <>
             <h1>
-              ETH Price: <span className="text-[#2e90cf]">${formatEtherPrice(ethPrice)}</span>
+              ETH Price: <span className="text-primary">${formatEtherPrice(ethPrice)}</span>
             </h1>
             {/* <p className="flex items-center gap-1">
               Gas Price: <span className="text-[#2e90cf]">{gasPrice} Gwei</span>

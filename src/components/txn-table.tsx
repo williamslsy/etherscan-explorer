@@ -1,3 +1,4 @@
+'use client';
 import React, { useState } from 'react';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
@@ -5,9 +6,29 @@ import { formatDate, formatEthPrice, formatEthPriceInUsd, formatFromNow } from '
 import Link from 'next/link';
 import { fetchAccountTransactions } from '@/lib/server-utils';
 import { Transaction } from '@/lib/types';
+import PaginationControls from './pagination-controls';
 
-export default async function TxnTable({ address }: { address: string }) {
-  const transactionData: Transaction[] = (await fetchAccountTransactions(address)) as Transaction[];
+interface TxnTableProps {
+  address: string;
+  transactionData: Transaction[];
+}
+
+export default function TxnTable({ address, transactionData }: TxnTableProps) {
+  const [currentPage, setCurrentPage] = useState<number>(1);
+
+  const paginate = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const transactionsPerPage = 10;
+
+  const indexOfLastTransaction = currentPage * transactionsPerPage;
+  const indexOfFirstTransaction = indexOfLastTransaction - transactionsPerPage;
+  const currentTransactions = transactionData.slice(indexOfFirstTransaction, indexOfLastTransaction);
+  const displayedPages = 10;
+  const totalPages = Math.ceil(transactionData.length / transactionsPerPage);
+  const maxDisplayedPages = Math.min(displayedPages, totalPages);
+  const startPage = totalPages > maxDisplayedPages ? Math.max(1, currentPage - Math.floor(maxDisplayedPages / 2)) : 1;
 
   return (
     <div className="space-y-8">
@@ -30,7 +51,7 @@ export default async function TxnTable({ address }: { address: string }) {
               <div className="loader">Loading...</div>
             </div>
           ) : (
-            transactionData.map((transaction) => (
+            currentTransactions.map((transaction) => (
               <TableRow key={transaction.hash}>
                 <TooltipProvider>
                   <TableCell>
@@ -42,13 +63,21 @@ export default async function TxnTable({ address }: { address: string }) {
                   <TableCell>{formatFromNow(transaction.timeStamp * 1000)}</TableCell>
                   <TableCell>
                     <Tooltip>
-                      <TooltipTrigger>{transaction.from ? `${transaction.from.substring(0, 16)}...` : 'Loading...'}</TooltipTrigger>
+                      <TooltipTrigger>
+                        <Link href={`/address/${transaction.from}`} className="text-red-400">
+                          {transaction.from ? `${transaction.from.substring(0, 16)}...` : 'Loading...'}
+                        </Link>
+                      </TooltipTrigger>
                       <TooltipContent>{transaction.from}</TooltipContent>
                     </Tooltip>
                   </TableCell>
                   <TableCell>
                     <Tooltip>
-                      <TooltipTrigger>{transaction.to ? `${transaction.to.substring(0, 16)}...` : 'Loading...'}</TooltipTrigger>
+                      <TooltipTrigger>
+                        <Link href={`/address/${transaction.to}`} className="text-red-400">
+                          {transaction.to ? `${transaction.to.substring(0, 16)}...` : 'Loading...'}
+                        </Link>
+                      </TooltipTrigger>
                       <TooltipContent>{transaction.to}</TooltipContent>
                     </Tooltip>
                   </TableCell>
@@ -59,6 +88,15 @@ export default async function TxnTable({ address }: { address: string }) {
           )}
         </TableBody>
       </Table>
+      <PaginationControls
+        transaction={transactionData}
+        transactionsPerPage={transactionsPerPage}
+        currentPage={currentPage}
+        paginate={paginate}
+        maxDisplayedPages={maxDisplayedPages}
+        totalPages={totalPages}
+        startPage={startPage}
+      />
     </div>
   );
 }
