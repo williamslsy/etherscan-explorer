@@ -1,55 +1,69 @@
 import React from 'react';
 import { Card, CardContent, CardHeader } from './ui/card';
-import { formatEthPrice } from '@/lib/utils';
-export default function TxnOverview() {
+import { cn, formatEthPrice, formatFromNow } from '@/lib/utils';
+import Link from 'next/link';
+import { fetchTransaction } from '@/lib/server-utils';
+import { Transaction } from '@/lib/types';
+import { ExternalLink } from 'lucide-react';
+
+export default async function TxnOverview({ address, txnHash }: { address: string; txnHash: string }) {
+  const selectedTransaction: Transaction = await fetchTransaction(address, txnHash);
+
+  if (!selectedTransaction) return <div>Loading...</div>;
+
+  const ethValue = selectedTransaction.value ? formatEthPrice(selectedTransaction.value) : '';
+
+  const status = selectedTransaction?.txreceipt_status === '1' && selectedTransaction?.isError === '0' ? 'Success' : 'Failure';
+
+  const transactionFee =
+    selectedTransaction.gasPrice && selectedTransaction.gasUsed ? formatEthPrice((parseFloat(selectedTransaction.gasPrice) * parseFloat(selectedTransaction.gasUsed)).toString()) : '';
+
+  const transactionFeeInGwei = selectedTransaction.gasPrice ? parseFloat(selectedTransaction.gasPrice) / 1e9 : '';
   return (
     <div className="mt-8">
-      <h2 className="py-6 border-b">
-        <span className="font-light text-lg">Address:{'  '}</span>
-        <span className="text-biconomy">{'0x95222290DD7278Aa3Ddd389Cc1E1d165CC4BAfe5'}</span>
-      </h2>
       <Card className="border mt-8">
         <CardHeader className="text-lg font-semibold">Overview</CardHeader>
         <CardContent className="flex flex-col gap-6 text-sm">
           <p className="flex flex-col gap-1 uppercase">
             <span className="opacity-70">Transaction Hash:</span>
-            <span>{'balanceInEth'} 0x</span>
+            <div className="flex gap-2 items-center">
+              <span className="text-primary">{txnHash}</span>
+              <Link href={`https://etherscan.io/tx/${txnHash}`}>
+                <ExternalLink size={15} />
+              </Link>
+            </div>
           </p>
           <p className="flex flex-col gap-1 uppercase">
             <span className="opacity-70">Status </span>
-            <span>{'balanceInEth'} 0x</span>
+            <span className={cn('text-primary', { 'text-green-500': status === 'Success' })}>{status}</span>
           </p>
           <p className="flex flex-col gap-1 uppercase">
             <span className="opacity-70">Block:</span>
-            <span>{'balanceInEth'} 0x</span>
+            <span className="text-primary">{selectedTransaction.blockNumber} </span>
           </p>
           <p className="flex flex-col gap-1 uppercase">
             <span className="opacity-70">Timestamp:</span>
-            <span>{'balanceInEth'} 0x</span>
+            <span className="text-primary">{formatFromNow(selectedTransaction.timeStamp * 1000)}</span>
           </p>
           <p className="flex flex-col gap-1 uppercase">
             <span className="opacity-70">From:</span>
-            <span>{'balanceInEth'} 0x</span>
+            <span className="text-primary">{selectedTransaction.from}</span>
           </p>
           <p className="flex flex-col gap-1 uppercase">
             <span className="opacity-70">To:</span>
-            <span>{'balanceInEth'} 0x</span>
+            <span className="text-primary">{selectedTransaction.to}</span>
           </p>
           <p className="flex flex-col gap-1 uppercase">
             <span className="opacity-70">Value:</span>
-            <span>{'balanceInEth'} 0x</span>
+            <span className="text-primary">{ethValue} ETH </span>
           </p>
           <p className="flex flex-col gap-1 uppercase">
             <span className="opacity-70">Transaction Fee:</span>
-            <span>{'balanceInEth'} 0x</span>
+            <span className="text-primary">{transactionFeeInGwei} Gwei</span>
           </p>
           <p className="flex flex-col gap-1 uppercase">
             <span className="opacity-70">Gas Price:</span>
-            <span>{'balanceInEth'} 0x</span>
-          </p>
-          <p className="flex flex-col gap-1 uppercase">
-            <span className="opacity-70">ETH Value</span>
-            <span>$ {formatEthPrice('ethPrice')}</span>
+            <span className="text-primary">{selectedTransaction.gasPrice} </span>
           </p>
         </CardContent>
       </Card>

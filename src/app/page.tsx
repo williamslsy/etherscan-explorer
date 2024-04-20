@@ -1,9 +1,4 @@
 import EthSummary from '@/components/eth-summary';
-import Overview from '@/components/overview';
-import SearchArea from '@/components/search-area';
-import TxnTable from '@/components/txn-table';
-import Image from 'next/image';
-
 export default function Home() {
   return (
     <main className=" dark:bg-slate-950">

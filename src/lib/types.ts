@@ -1,4 +1,4 @@
-interface Transaction {
+export interface Transaction {
   blockHash: string;
   blockNumber: string;
   confirmations: string;

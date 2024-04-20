@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
-import { formatDate } from '@/lib/utils';
-import { transactionData } from '@/lib/constants';
+import { formatDate, formatEthPrice, formatEthPriceInUsd, formatFromNow } from '@/lib/utils';
 import Link from 'next/link';
-import { fetchAccountBalanceInEth } from '@/lib/server-utils';
+import { fetchAccountTransactions } from '@/lib/server-utils';
+import { Transaction } from '@/lib/types';
 
 export default async function TxnTable({ address }: { address: string }) {
+  const transactionData: Transaction[] = (await fetchAccountTransactions(address)) as Transaction[];
+
   return (
     <div className="space-y-8">
-      <h3 className="px-4 py-2 bg-biconomy text-white w-max rounded-lg">Transactions</h3>
+      <h3 className="px-4 py-2 bg-primary text-white w-max rounded-lg">Transactions</h3>
       <Table className="border">
         <TableCaption>List of all the transactions</TableCaption>
         <TableHeader className="text-sm">
@@ -32,14 +34,12 @@ export default async function TxnTable({ address }: { address: string }) {
               <TableRow key={transaction.hash}>
                 <TooltipProvider>
                   <TableCell>
-                    {/* <Tooltip>
-                      <TooltipTrigger>{transaction.hash ? `${transaction.hash.substring(0, 16)}...` : 'Loading...'}</TooltipTrigger>
-                      <TooltipContent>{transaction.hash}</TooltipContent>
-                    </Tooltip> */}
-                    <Link href={`/txn-details/${transaction.hash}`}>{transaction.hash ? `${transaction.hash.substring(0, 16)}...` : 'Loading...'}</Link>
+                    <Link href={`/address/${address}/tx/${transaction.hash}`} className="text-primary">
+                      {transaction.hash ? `${transaction.hash.substring(0, 16)}...` : 'Loading...'}
+                    </Link>
                   </TableCell>
                   <TableCell>{transaction.blockNumber}</TableCell>
-                  <TableCell>{formatDate(transaction.timeStamp)}</TableCell>
+                  <TableCell>{formatFromNow(transaction.timeStamp * 1000)}</TableCell>
                   <TableCell>
                     <Tooltip>
                       <TooltipTrigger>{transaction.from ? `${transaction.from.substring(0, 16)}...` : 'Loading...'}</TooltipTrigger>
@@ -52,7 +52,7 @@ export default async function TxnTable({ address }: { address: string }) {
                       <TooltipContent>{transaction.to}</TooltipContent>
                     </Tooltip>
                   </TableCell>
-                  <TableCell>{transaction.value}</TableCell>
+                  <TableCell>{formatEthPrice(transaction.value)} ETH</TableCell>
                 </TooltipProvider>
               </TableRow>
             ))
