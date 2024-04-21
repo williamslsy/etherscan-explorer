@@ -33,8 +33,8 @@ export const fetchEthPrice = async () => {
   }
 };
 
-export const fetchAccountTransactions = async (address: string) => {
-  const apiUrl = `${API_BASE_URL}?module=account&action=txlist&address=${address}&apikey=${process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY}`;
+export const fetchAccountTransactions = async (address: string, page: number = 1, offset: number = 10) => {
+  const apiUrl = `${API_BASE_URL}?module=account&action=txlist&address=${address}&page=${page}&offset=${offset}&sort=desc&apikey=${process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY}`;
   try {
     const response = await fetch(apiUrl);
     if (!response.ok) {

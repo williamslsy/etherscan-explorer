@@ -7,7 +7,7 @@ import React from 'react';
 
 export default async function Page({ params }: { params: { address: string } }) {
   const { address } = params;
-  const transactionData: Transaction[] = (await fetchAccountTransactions(address)) as Transaction[];
+  const transactionData: Transaction[] = (await fetchAccountTransactions(address, 1, 100)) as Transaction[];
 
   return (
     <main className=" dark:bg-slate-950">

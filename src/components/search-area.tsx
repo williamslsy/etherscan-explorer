@@ -1,17 +1,39 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
 import { Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { toast } from './ui/use-toast';
 
 export default function SearchArea() {
-  const [searchValue, setSearchValue] = useState('0x57b69EE64F985ea2f62BDdf8bD6233262b543410');
+  const [searchValue, setSearchValue] = useState('');
   const router = useRouter();
 
+  const onChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const addressRegex = /^0x[a-fA-F0-9]{40}$/;
+    const inputText = e.target.value;
+    try {
+      if (inputText === '' || addressRegex.test(inputText)) {
+        setSearchValue(inputText);
+      } else {
+        throw new Error('Invalid address format.');
+      }
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Error',
+        description: 'Invalid input',
+        duration: 1000,
+      });
+    }
+  };
+
   const handleSearch = () => {
+    if (!searchValue) return;
+    setSearchValue('');
     router.push(`/address/${searchValue}`);
   };
 
@@ -25,7 +47,7 @@ export default function SearchArea() {
           The Ethereum Blockchain Explorer
         </Link>
         <div className="p-2 bg-white dark:bg-black rounded-lg flex justify-between gap-2 relative">
-          <Input placeholder="Search by Address" className="w-full dark:bg-black" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
+          <Input placeholder="Search by Address" className="w-full dark:bg-black" value={searchValue} onChange={onChangeText} />
           {searchValue && (
             <button onClick={() => setSearchValue('')} className="font-bold absolute right-12 inset-y-0 px-4 hidden md:flex items-center justify-center text-black dark:text-white">
               x

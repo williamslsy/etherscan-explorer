@@ -4,9 +4,11 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 import { formatDate, formatEthPrice, formatEthPriceInUsd, formatFromNow } from '@/lib/utils';
 import Link from 'next/link';
-import { fetchAccountTransactions } from '@/lib/server-utils';
 import { Transaction } from '@/lib/types';
 import PaginationControls from './pagination-controls';
+import { Button } from './ui/button';
+import { DropdownMenu } from '@radix-ui/react-dropdown-menu';
+import { DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 
 interface TxnTableProps {
   address: string;
@@ -20,29 +22,79 @@ export default function TxnTable({ address, transactionData }: TxnTableProps) {
     setCurrentPage(pageNumber);
   };
 
-  const transactionsPerPage = 10;
+  const transactionsPerPage = 25;
 
   const indexOfLastTransaction = currentPage * transactionsPerPage;
   const indexOfFirstTransaction = indexOfLastTransaction - transactionsPerPage;
-  const currentTransactions = transactionData.slice(indexOfFirstTransaction, indexOfLastTransaction);
+  // const currentTransactions = transactionData.slice(indexOfFirstTransaction, indexOfLastTransaction);
   const displayedPages = 10;
   const totalPages = Math.ceil(transactionData.length / transactionsPerPage);
   const maxDisplayedPages = Math.min(displayedPages, totalPages);
   const startPage = totalPages > maxDisplayedPages ? Math.max(1, currentPage - Math.floor(maxDisplayedPages / 2)) : 1;
 
+  const [sortCriteria, setSortCriteria] = useState<'timeStamp' | 'value'>('timeStamp');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+
+  const sortTransactions = (transactions: Transaction[], criteria: 'timeStamp' | 'value', direction: 'asc' | 'desc') => {
+    return [...transactions].sort((a, b) => {
+      let valueA: number | bigint;
+      let valueB: number | bigint;
+
+      if (criteria === 'value') {
+        valueA = BigInt(a.value);
+        valueB = BigInt(b.value);
+      } else {
+        valueA = a.timeStamp;
+        valueB = b.timeStamp;
+      }
+
+      if (direction === 'asc') {
+        return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
+      } else {
+        return valueA < valueB ? 1 : valueA > valueB ? -1 : 0;
+      }
+    });
+  };
+
+  const toggleSortDirection = (criteria: 'timeStamp' | 'value') => {
+    setSortCriteria(criteria);
+    setSortDirection((prevDirection) => (prevDirection === 'asc' ? 'desc' : 'asc'));
+  };
+
+  const sortedTransactions = sortTransactions(transactionData, sortCriteria, sortDirection);
+  const currentTransactions = sortedTransactions.slice(indexOfFirstTransaction, indexOfLastTransaction);
+
   return (
     <div className="space-y-8">
       <h3 className="px-4 py-2 bg-primary text-white w-max rounded-lg">Transactions</h3>
       <Table className="border">
-        <TableCaption>List of all the transactions</TableCaption>
+        <TableCaption>List of last 100 transactions</TableCaption>
         <TableHeader className="text-sm">
           <TableRow>
             <TableHead>Transaction Hash</TableHead>
             <TableHead>Block</TableHead>
-            <TableHead>Timestamp</TableHead>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <TableHead className="text-red-200">Timestamp {sortCriteria === 'timeStamp' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}</TableHead>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => toggleSortDirection('timeStamp')}>
+                  {sortCriteria === 'timeStamp' && sortDirection === 'asc' ? 'Latest to Earliest' : 'Earliest to Latest'}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             <TableHead>From</TableHead>
             <TableHead>To</TableHead>
-            <TableHead>Amount</TableHead>
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <TableHead className="text-red-200">Amount {sortCriteria === 'value' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}</TableHead>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => toggleSortDirection('value')}>{sortCriteria === 'value' && sortDirection === 'asc' ? 'Highest to Lowest' : 'Lowest to Highest'}</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </TableRow>
         </TableHeader>
         <TableBody>
