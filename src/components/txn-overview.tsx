@@ -28,7 +28,7 @@ export default async function TxnOverview({ address, txnHash }: { address: strin
             <span className="opacity-70">Transaction Hash:</span>
             <div className="flex flex-wrap gap-2 items-center">
               <span className="text-primary break-all">{txnHash}</span>
-              <Link href={`https://etherscan.io/tx/${txnHash}`}>
+              <Link href={`https://etherscan.io/tx/${txnHash}`} target="_blank" rel="noopener noreferrer">
                 <ExternalLink size={15} />
               </Link>
             </div>
