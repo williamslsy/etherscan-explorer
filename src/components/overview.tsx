@@ -16,7 +16,7 @@ export default async function Overview({ address }: { address: string }) {
       <AddressSection address={address} />
       <Card className="border mt-8">
         <CardHeader className="text-lg font-semibold">Overview</CardHeader>
-        <CardContent className="flex flex-col gap-6 text-sm">
+        <CardContent className="flex flex-col md:flex-row gap-6 text-sm">
           <p className="flex flex-col gap-1 uppercase">
             <span className="opacity-70">ETH balance</span>
             <span>{balanceInEth} ETH</span>

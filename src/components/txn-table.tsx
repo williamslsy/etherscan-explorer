@@ -66,7 +66,7 @@ export default function TxnTable({ address, transactionData }: TxnTableProps) {
     <div className="space-y-8 overflow-x-auto">
       <h3 className="px-4 py-2 bg-primary text-white w-max rounded-lg">Transactions</h3>
       <Table className="border min-w-full">
-        <TableCaption>List of last 100 transactions</TableCaption>
+        <TableCaption className="sr-only md:not-sr-only md:mt-2">List of last 100 transactions</TableCaption>
         <TableHeader className="text-sm">
           <TableRow>
             <TableHead>Transaction Hash</TableHead>
@@ -74,7 +74,7 @@ export default function TxnTable({ address, transactionData }: TxnTableProps) {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <TableHead className="whitespace-nowrap text-sm flex items-center justify-between text-red-700 dark:text-red-200">
+                <TableHead className="whitespace-nowrap text-sm flex items-center justify-between text-red-700 dark:text-red-200 cursor-pointer">
                   Timestamp {sortCriteria === 'timeStamp' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
                 </TableHead>
               </DropdownMenuTrigger>
@@ -89,7 +89,7 @@ export default function TxnTable({ address, transactionData }: TxnTableProps) {
             <TableHead>To</TableHead>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <TableHead className="whitespace-nowrap text-sm flex items-center justify-between text-red-700 dark:text-red-200">
+                <TableHead className="whitespace-nowrap text-sm flex items-center justify-between text-red-700 dark:text-red-200 cursor-pointer">
                   Amount {sortCriteria === 'value' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
                 </TableHead>
               </DropdownMenuTrigger>
