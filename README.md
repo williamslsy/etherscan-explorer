@@ -73,4 +73,4 @@ Run the development server:
 
 ## Deploy
 
-App Currently Deployed to Vercel: [](https://)
+App Currently Deployed to Vercel: [Etherscan Explorer](https://sly-etherscan-explorer.vercel.app)

@@ -74,7 +74,9 @@ export default function TxnTable({ address, transactionData }: TxnTableProps) {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <TableHead className="text-red-700 dark:text-red-200">Timestamp {sortCriteria === 'timeStamp' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}</TableHead>
+                <TableHead className="whitespace-nowrap text-sm flex items-center justify-between text-red-700 dark:text-red-200">
+                  Timestamp {sortCriteria === 'timeStamp' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
+                </TableHead>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => toggleSortDirection('timeStamp')}>
@@ -87,7 +89,9 @@ export default function TxnTable({ address, transactionData }: TxnTableProps) {
             <TableHead>To</TableHead>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <TableHead className="text-red-700 dark:text-red-200">Amount {sortCriteria === 'value' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}</TableHead>
+                <TableHead className="whitespace-nowrap text-sm flex items-center justify-between text-red-700 dark:text-red-200">
+                  Amount {sortCriteria === 'value' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
+                </TableHead>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => toggleSortDirection('value')}>{sortCriteria === 'value' && sortDirection === 'asc' ? 'Highest to Lowest' : 'Lowest to Highest'}</DropdownMenuItem>
