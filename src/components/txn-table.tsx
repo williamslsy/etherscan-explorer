@@ -2,11 +2,10 @@
 import React, { useState } from 'react';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
-import { formatDate, formatEthPrice, formatEthPriceInUsd, formatFromNow } from '@/lib/utils';
+import { formatEthPrice, formatFromNow } from '@/lib/utils';
 import Link from 'next/link';
 import { Transaction } from '@/lib/types';
 import PaginationControls from './pagination-controls';
-import { Button } from './ui/button';
 import { DropdownMenu } from '@radix-ui/react-dropdown-menu';
 import { DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 
