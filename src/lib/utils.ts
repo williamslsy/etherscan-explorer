@@ -28,6 +28,22 @@ export const isValidData = (data: any) => {
   return typeof data === 'string' || typeof data === 'number';
 };
 
+export const formatWeiToEth = (weiString: string): string => {
+  const weiBigInt = BigInt(weiString);
+  const etherBigInt = weiBigInt / BigInt('1000000000000000000');
+  const remainder = weiBigInt % BigInt('1000000000000000000');
+  const formattedEther = etherBigInt.toString() + '.' + remainder.toString().padStart(18, '0').slice(0, 5);
+  return formattedEther;
+};
+
+export const formatGasPriceToGwei = (gasPriceWei: string) => {
+  const weiBigInt = BigInt(gasPriceWei);
+  const gweiBigInt = weiBigInt / BigInt(1e9);
+  const remainder = weiBigInt % BigInt(1e9);
+  const paddedRemainder = remainder.toString().padStart(9, '0');
+  const formattedGwei = `${gweiBigInt}.${paddedRemainder}`;
+  return formattedGwei;
+};
 export const formatDate = (timestamp: number) => {
   const date = new Date(timestamp * 1000);
   return date.toISOString();

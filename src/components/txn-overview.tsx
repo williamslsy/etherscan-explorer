@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardContent, CardHeader } from './ui/card';
-import { cn, formatEthPrice, formatFromNow } from '@/lib/utils';
+import { cn, formatEthPrice, formatEthPriceInUsd, formatEtherPrice, formatFromNow, formatGasPriceToGwei, formatWeiToEth } from '@/lib/utils';
 import Link from 'next/link';
 import { fetchTransaction } from '@/lib/server-utils';
 import { Transaction } from '@/lib/types';
@@ -15,10 +15,9 @@ export default async function TxnOverview({ address, txnHash }: { address: strin
 
   const status = selectedTransaction?.txreceipt_status === '1' && selectedTransaction?.isError === '0' ? 'Success' : 'Failure';
 
-  const transactionFee =
-    selectedTransaction.gasPrice && selectedTransaction.gasUsed ? formatEthPrice((parseFloat(selectedTransaction.gasPrice) * parseFloat(selectedTransaction.gasUsed)).toString()) : '';
+  const transactionFeeInEth =
+    selectedTransaction.gasPrice && selectedTransaction.gasUsed ? formatWeiToEth((BigInt(selectedTransaction.gasPrice) * BigInt(selectedTransaction.gasUsed)).toString()) : '0';
 
-  const transactionFeeInGwei = selectedTransaction.gasPrice ? parseFloat(selectedTransaction.gasPrice) / 1e9 : '';
   return (
     <div className="mt-8">
       <Card className="border mt-8">
@@ -59,11 +58,11 @@ export default async function TxnOverview({ address, txnHash }: { address: strin
           </p>
           <p className="flex flex-col gap-1">
             <span className="opacity-70">Transaction Fee:</span>
-            <span className="text-primary">{transactionFeeInGwei} Gwei</span>
+            <span className="text-primary">{transactionFeeInEth} ETH</span>
           </p>
           <p className="flex flex-col gap-1">
             <span className="opacity-70">Gas Price:</span>
-            <span className="text-primary">{selectedTransaction.gasPrice} </span>
+            <span className="text-primary">{formatGasPriceToGwei(selectedTransaction.gasPrice)} </span>
           </p>
         </CardContent>
       </Card>
