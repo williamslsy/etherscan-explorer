@@ -24,16 +24,16 @@ export default async function TxnOverview({ address, txnHash }: { address: strin
       <Card className="border mt-8">
         <CardHeader className="text-lg font-semibold">Overview</CardHeader>
         <CardContent className="flex flex-col gap-6 text-sm">
-          <div className="flex flex-col gap-1 ">
+          <div className="flex flex-col gap-1 break-words">
             <span className="opacity-70">Transaction Hash:</span>
-            <div className="flex gap-2 items-center">
-              <span className="text-primary">{txnHash}</span>
+            <div className="flex flex-wrap gap-2 items-center">
+              <span className="text-primary break-all">{txnHash}</span>
               <Link href={`https://etherscan.io/tx/${txnHash}`}>
                 <ExternalLink size={15} />
               </Link>
             </div>
           </div>
-          <p className="flex flex-col gap-1">
+          <p className="flex flex-col gap-1 break-words">
             <span className="opacity-70">Status </span>
             <span className={cn('text-primary', { 'text-green-500': status === 'Success' })}>{status}</span>
           </p>
@@ -45,13 +45,13 @@ export default async function TxnOverview({ address, txnHash }: { address: strin
             <span className="opacity-70">Timestamp:</span>
             <span className="text-primary">{formatFromNow(selectedTransaction.timeStamp * 1000)}</span>
           </p>
-          <p className="flex flex-col gap-1">
+          <p className="flex flex-col gap-1 break-words">
             <span className="opacity-70">From:</span>
-            <span className="text-primary">{selectedTransaction.from}</span>
+            <span className="text-primary break-all">{selectedTransaction.from}</span>
           </p>
-          <p className="flex flex-col gap-1">
+          <p className="flex flex-col gap-1 break-words">
             <span className="opacity-70">To:</span>
-            <span className="text-primary">{selectedTransaction.to}</span>
+            <span className="text-primary break-all">{selectedTransaction.to}</span>
           </p>
           <p className="flex flex-col gap-1">
             <span className="opacity-70">Value:</span>

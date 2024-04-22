@@ -11,10 +11,10 @@ export default function AddressSection({ address }: { address: string }) {
 
   return (
     <section>
-      <h2 className="py-6 border-b flex items-center gap-2">
+      <h2 className="py-6 border-b flex flex-col sm:flex-row items-start sm:items-center gap-2">
         <span className="font-light text-lg">Address:{'  '}</span>
-        <span className="text-primary">{address}</span>
-        <span className="hover:shadow-lg rounded-lg cursor-pointer" onClick={handleCopyClick}>
+        <span className="text-primary break-all">{address}</span>
+        <span className="hover:shadow-lg rounded-lg cursor-pointer self-start sm:self-center" onClick={handleCopyClick}>
           {isCopied ? <CheckCheck size={15} color="green" /> : <Copy size={15} />}
         </span>
       </h2>

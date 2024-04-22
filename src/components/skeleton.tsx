@@ -1,9 +1,13 @@
 import { cn } from '@/lib/utils';
 
-type SkeletonProps = {
+interface SkeletonProps {
   className?: string;
-};
+  width?: string;
+  height?: string;
+}
 
-export default function Skeleton({ className }: SkeletonProps) {
-  return <div className={cn('animate-pulse h-4 w-[550px] rounded-md bg-white/5', className)} />;
+export default function Skeleton({ className, width = 'full', height = '4' }: SkeletonProps) {
+  const widthClass = `w-${width}`;
+  const heightClass = `h-${height}`;
+  return <div className={cn('animate-pulse rounded-md bg-gray-300 dark:bg-gray-700', widthClass, heightClass, className)} />;
 }
